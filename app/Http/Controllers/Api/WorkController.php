@@ -3,14 +3,18 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Api\BaseController;
+use App\User;
 use App\Work;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Resources\Work as WorkResource;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class WorkController extends BaseController
 {
+    use SoftDeletes;
     /**
      * Display a listing of the resource.
      *
@@ -18,9 +22,9 @@ class WorkController extends BaseController
      */
     public function index(): JsonResponse
     {
-        $work = Work::all();
+        $works = Auth::user()->works;
 
-        return $this->sendResponse(WorkResource::collection($work), 'Works retrieved successfully.');
+        return $this->sendResponse(WorkResource::collection($works), 'Works retrieved successfully.');
     }
 
     /**
@@ -31,7 +35,10 @@ class WorkController extends BaseController
      */
     public function store(Request $request): JsonResponse
     {
-        $input = $request->all();
+        $input = [
+            'name' => $request->name,
+            'user_id' => $request->user()->id
+        ];
 
         $validator = Validator::make($input, [
             'name' => 'required',
