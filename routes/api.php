@@ -20,6 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('register', 'Api\RegisterController')->name('register');
 Route::post('login', 'Api\LoginController')->name('login');
+Route::get('logout', 'Api\LogoutController')->name('logout');
 
 Route::middleware('auth:api')->group( function () {
     Route::apiResource('works', 'Api\WorkController');
