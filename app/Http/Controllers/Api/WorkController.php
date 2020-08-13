@@ -82,14 +82,13 @@ class WorkController extends BaseController
         $input = $request->all();
 
         $validator = Validator::make($input, [
-            'name' => 'required',
+            'status' => 'required',
         ]);
 
         if($validator->fails()){
             return $this->sendError('Validation Error.', $validator->errors());
         }
 
-        $work->name = $input['name'];
         $work->status = $input['status'];
         $work->save();
 
